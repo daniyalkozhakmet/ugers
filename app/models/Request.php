@@ -27,6 +27,16 @@ class Request
 
 		return false;
 	}
+	public function get_posted(): bool
+	{
+		if ($_SERVER['REQUEST_METHOD'] == "GET" && count($_GET) > 0) {
+			var_dump($_GET);
+			return true;
+		}
+
+		return false;
+	}
+
 
 
 	/** get a value from the POST variable **/

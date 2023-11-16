@@ -51,7 +51,6 @@ trait Model
 
 		$query .= " order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
 		$data = array_merge($data, $data_not);
-
 		return $this->query($query, $data);
 	}
 
@@ -160,6 +159,7 @@ trait Model
 
 		$this->errors = [];
 
+
 		if (!empty($this->validationRules)) {
 			foreach ($this->validationRules as $column => $rules) {
 
@@ -170,7 +170,6 @@ trait Model
 
 					switch ($rule) {
 						case 'required':
-
 							if (empty($data[$column]))
 								$this->errors[$column] = ucfirst($column) . " is required";
 							break;
@@ -179,23 +178,23 @@ trait Model
 							if (!filter_var(trim($data[$column]), FILTER_VALIDATE_EMAIL))
 								$this->errors[$column] = "Invalid email address";
 							break;
+						case 'numeric_fixed_8':
+							if (!preg_match("/^\d{1,10}$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have numbers with 10 values";
+							break;
 						case 'alpha':
-
 							if (!preg_match("/^[a-zA-Z]+$/", trim($data[$column])))
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters without spaces";
 							break;
 						case 'alpha_space':
-
 							if (!preg_match("/^[a-zA-Z ]+$/", trim($data[$column])))
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
 						case 'alpha_numeric':
-
 							if (!preg_match("/^[a-zA-Z0-9]+$/", trim($data[$column])))
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
 						case 'alpha_numeric_symbol':
-
 							if (!preg_match("/^[a-zA-Z0-9\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
@@ -210,7 +209,10 @@ trait Model
 							if (strlen(trim($data[$column])) < 8)
 								$this->errors[$column] = ucfirst($column) . " should not be less than 8 characters";
 							break;
-
+						case "date":
+							if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", trim($data[$column])))
+								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
+							break;
 						case 'unique':
 
 							$key = $this->getPrimaryKey();
@@ -234,7 +236,6 @@ trait Model
 				}
 			}
 		}
-
 		if (empty($this->errors)) {
 			return true;
 		}

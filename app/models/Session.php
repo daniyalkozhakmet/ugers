@@ -92,6 +92,39 @@ class Session
 
 		return false;
 	}
+	public function is_not_logged_in(): bool
+	{
+		$this->start_session();
+
+		if (!empty($_SESSION[$this->userkey])) {
+
+			return false;
+		}
+
+		return true;
+	}
+	public function is_admin(): bool
+	{
+		$this->start_session();
+
+		if (!empty($_SESSION[$this->userkey] && $_SESSION[$this->userkey]->role == "admin")) {
+
+			return true;
+		}
+
+		return false;
+	}
+	public function is_user(): bool
+	{
+		$this->start_session();
+
+		if (!empty($_SESSION[$this->userkey] && $_SESSION[$this->userkey]->role == "user")) {
+
+			return true;
+		}
+
+		return false;
+	}
 
 	/** gets data from a column in the session user data **/
 	public function user(string $key = '', mixed $default = ''): mixed

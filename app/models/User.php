@@ -19,10 +19,11 @@ class User
 	protected $allowedColumns = [
 		'username',
 		'password',
-		'role_name',
+		'role',
 		'role_id',
 		'user_id'
 	];
+	public $info;
 
 	/*****************************
 	 * 	rules include:
@@ -73,7 +74,7 @@ class User
 			if (password_verify($data['password'], $row->password)) {
 				$ses = new \Core\Session;
 				$ses->auth($row);
-				redirect('home');
+				redirect('claim/get_my_claims');
 			} else {
 				$this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
 			}
@@ -81,30 +82,35 @@ class User
 			$this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
 		}
 	}
-	public function seedUserRoles()
+	public function getUsers()
 	{
-
-		$this->seedUsers();
-		$this->seedRoles();
-		$this->seedPivotTable();
+		$users = $this->findAll();
+		if (is_bool($users)) {
+			return ['error' => 'Could not retrieve'];
+		}
+		return $users;
 	}
-	public function seedRoles()
+	public function getUserById($data)
 	{
-		$roles = [
-			["role_name" => 'user'],
-			["role_name" => 'admin'],
-		];
-		try {
-			$this->table = 'roles';
-			if ($this->getAmountOfRecords("id") == 0) {
-				foreach ($roles as $data) {
-					$this->insert($data);
-				}
-			}
+		$user = $this->first(['id' => $data["id"]]);
+		if (is_bool($user)) {
+			return ['error' => 'User with that id not found'];
+		}
+		return [$user];
+	}
+	public function updateUser($data, $id)
+	{
+		if ($data['password'] == $data['password_confirmation']) {
+			$data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+			$this->update($id, $data);
 			return true;
-		} catch (\Throwable $th) {
+		} else {
 			return false;
 		}
+	}
+	public function seedUserRoles()
+	{
+		$this->seedUsers();
 	}
 	public function seedUsers()
 	{
@@ -112,30 +118,42 @@ class User
 			[
 				"username" => 'res1',
 				"password" => 'User2023!',
+				"role" => 'user'
 			],
 			[
 				"username" => 'res2',
 				"password" => 'User2023!',
+				"role" => 'user'
 			],
 			[
 				"username" => 'res3',
 				"password" => 'User2023!',
+				"role" => 'user'
 			],
 			[
 				"username" => 'res4',
 				"password" => 'User2023!',
+				"role" => 'user'
 			],
 			[
 				"username" => 'res5',
 				"password" => 'User2023!',
+				"role" => 'user'
 			],
 			[
 				"username" => 'res6',
 				"password" => 'User2023!',
+				"role" => 'user'
 			],
 			[
 				"username" => 'res7',
 				"password" => 'User2023!',
+				"role" => 'user'
+			],
+			[
+				"username" => 'admin',
+				"password" => 'admin',
+				"role" => 'admin'
 			],
 		];
 		try {
@@ -152,23 +170,6 @@ class User
 			return true;
 		} catch (\Throwable $th) {
 			return false;
-		}
-	}
-	public function seedPivotTable()
-	{;
-		$this->table = 'roles';
-		$roles = $this->where(['role_name' => 'user'])[0];
-		$this->table = 'users';
-		$users = $this->findAll();
-
-
-		$this->table = 'user_role';
-		if ($this->getAmountOfRecords("user_id") == 0) {
-			foreach ($users as $user) {
-				var_dump([['user_id' => $user->id], ['role_id' => $roles->id]]);
-				$this->insert([['user_id' => $user->id], ['role_id' => $roles->id]]);
-			}
-			// $this->insert($data);
 		}
 	}
 }

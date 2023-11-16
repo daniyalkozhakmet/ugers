@@ -9,6 +9,11 @@ if ($_SERVER['SERVER_NAME'] == 'localhost') {
 	define('DBUSER', 'root');
 	define('DBPASS', '');
 	define('DBDRIVER', '');
+	define('ACCESSKEYID', 'AKIAY5NCYP3W4VHZZIAV');
+	define('SECRETACCESSKEY', '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');
+	define('REGION', 'eu-north-1');
+	define('VERSION', 'latest');
+	define('BUCKET', 'pharmafy');
 
 	define('ROOT', 'http://localhost/ugers/public');
 } else {

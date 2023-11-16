@@ -14,7 +14,7 @@ class Home
 	public function index()
 	{
 
-		$this->view('home');
+		$this->view('login');
 	}
 
 }
