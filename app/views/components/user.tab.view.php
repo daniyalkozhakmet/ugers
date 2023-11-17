@@ -7,13 +7,20 @@
     </li>
 </ul>
 <script>
-    console.log('Hello')
+    function containsString(mainString, searchString) {
+        // Escape special characters in the search string
+        const escapedSearchString = searchString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        // Create a regex pattern with the escaped search string
+        const pattern = new RegExp(escapedSearchString);
+
+        // Test if the main string contains the search string
+        return pattern.test(mainString);
+    }
     const currentUrl = window.location.href;
-    const myArray = currentUrl.split("/");
     const links = ['create', 'get_my_claims']
     links.forEach((link) => {
-
-        if (myArray.includes(link)) {
+        if (containsString(currentUrl, link)) {
             document.querySelector(`#${link}`).classList.add('active');
         }
     })

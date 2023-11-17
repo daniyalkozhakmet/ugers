@@ -5,9 +5,7 @@ namespace Controller;
 
 require(__DIR__ . '/../../vendor/autoload.php');
 
-use Aws\Exception\CredentialsException;
-use Aws\S3\Exception\S3Exception;
-use Aws\S3\S3Client;
+use Core\Pager;
 use Model\Image;
 
 defined('ROOTPATH') or exit('Access Denied!');
@@ -36,16 +34,17 @@ class Claim
         $data['error'] = '';
         $username = $ses->user('username');
         $claim_id = $req->get('id');
-        if ($claim_id == '')
+        if ($claim_id == '') {
             return redirect('claim/get_my_claims');
+        }
+
 
         $claim = $data['claim']->get_single_claim(['id' => $claim_id]);
         if (is_string($claim)) {
             $data['error'] = $claim;
         } else {
-            var_dump($claim->res == $username);
             if ($claim->res == $username) {
-                $data['claim'] = $claim;
+                $data['data'] = $claim;
                 return $data;
             }
         }
@@ -61,8 +60,7 @@ class Claim
     public function single()
     {
         $data = $this->authorize_user_can_edit();
-        var_dump($data);
-        $this->view('claims');
+        $this->view('single', $data);
     }
     public function create()
     {
@@ -82,7 +80,6 @@ class Claim
                 foreach ($images_name as $image_name) {
                     if (!empty($files[$image_name]['name'])) {
                         $image_AWS = $this->upload($files, $image_name);
-                        // var_dump($image_AWS);
                         if (isset($image_AWS['errors']) &&  count($image_AWS['errors']) > 0) {
 
                             foreach ($image_AWS['errors'] as $key => $value) {
@@ -95,7 +92,6 @@ class Claim
                                 $data['claim']->errors += $image_AWS['message'];
                             } else {
                                 $new_claim += array($image_name => $image_AWS['link']);
-                                // $data['claim']->errors += $image_AWS['message'];
                             }
                         }
                     }
@@ -120,11 +116,8 @@ class Claim
         }
         $allowed = ['image/jpeg', 'image/png', 'image/webp'];
         if (in_array($files[$image_name]['type'], $allowed)) {
-
             $new_claim[$image_name] = $folder . time() . rand(0, 1000) . $files[$image_name]['name'];
-            var_dump($files[$image_name]['type']);
-            $response = $s3->putObject($files[$image_name]['tmp_name'], $new_claim[$image_name],$files[$image_name]['type']);
-            var_dump($new_claim[$image_name]);
+            $response = $s3->putObject($files[$image_name]['tmp_name'], $new_claim[$image_name], $files[$image_name]['type']);
             move_uploaded_file($files[$image_name]['tmp_name'], $new_claim[$image_name]);
             $image = new Image;
             $image->resize($new_claim[$image_name], 1000);
@@ -135,54 +128,18 @@ class Claim
             return $response;
         }
     }
-    public function into_bucket($file_src, $file_name)
-    {
-
-        $s3 = new S3Client([
-            'version' => VERSION,
-            'region' => REGION,
-            'credentials' => [
-                'key' => ACCESSKEYID,
-                'secret' => SECRETACCESSKEY,
-            ]
-        ]);
-        $response = [];
-        try {
-            $result = $s3->putObject([
-                'Bucket' => BUCKET,
-                'Key' => $file_name,
-                'ACL' => 'public-read',
-                'SourceFile' => $file_src,
-            ]);
-            $result_arr = $result->toArray();
-            if (!empty($result_arr['ObjectURL'])) {
-                $s3_file_link = $result_arr['ObjectURL'];
-                $response += array('link' => $s3_file_link);
-            } else {
-                $api_err = 'FAIL';
-            }
-        } catch (S3Exception $e) {
-            $api_err = $e->getMessage();
-            //throw $th;
-        }
-        if (empty($api_err)) {
-            $status = 'success';
-            $statusMsg = 'Uploaded';
-        } else {
-            $statusMsg = $api_err;
-            $status = [$file_name => 'Errorrr'];
-        }
-        $response += array('status' => $status);
-        $response += array('message' => $statusMsg);
-        return $response;
-    }
-    public function get_my_claims()
+    public function get_my_claims($message = '')
     {
         $ses = $this->authorize_user();
         $req = new \Core\Request;
         $username = $ses->user('username');
         $data['claims'] = new \Model\Claim;
         $data['error'] = null;
+        $limit = 10;
+        $data['pager'] = new Pager($limit);
+        $offset = $data['pager']->offset;
+        $data['claims']->limit = $limit;
+        $data['claims']->offset = $offset;
 
         if ($req->get('invent') != '') {
             $search = $req->get('invent');
@@ -196,19 +153,89 @@ class Claim
         }
 
         $data['claims'] = $claims;
+        if ($message != '') {
+            $data['info'] = $message;
+        }
+        var_dump($data['info']);
         $this->view('myclaims', $data);
     }
 
     public function edit()
     {
+        $ses = $this->authorize_user();
         $data = $this->authorize_user_can_edit();
-        var_dump($data);
+        $req = new \Core\Request;
+        $claim_id = $req->get('id');
+        $data['claim'] = new \Model\Claim;
+        if ($req->posted()) {
+            $new_claim = $req->post();
+            $new_claim += array('res' => $ses->user('username'));
+            $new_claim += array('user_id' => $ses->user('id'));
+            $files = $req->files();
+            $images_name = ['image1', 'image2', 'image3'];
+            $image_AWS = [];
+            $image_err = [];
+            $check_before_image = $data['claim']->validate($new_claim);
+            if ($check_before_image) {
+                foreach ($images_name as $image_name) {
+                    if (!empty($files[$image_name]['name'])) {
+                        $image_AWS = $this->upload($files, $image_name);
+                        if (isset($image_AWS['errors']) &&  count($image_AWS['errors']) > 0) {
+
+                            foreach ($image_AWS['errors'] as $key => $value) {
+                                $newArray[$key] = $value;
+                                $image_err += array($key => $value);
+                            }
+                        } else {
+                            if ($image_AWS['status'] == 'error') {
+
+                                $data['claim']->errors += $image_AWS['message'];
+                            } else {
+                                $new_claim += array($image_name => $image_AWS['link']);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            $data['claim']->update_claim($claim_id, $new_claim);
+            $data['claim']->get_my_claims(['id' => $claim_id]);
+            $data['claim']->errors += $image_err;
+            // $data['data'] = $this->authorize_user_can_edit();
+            if (count($data['claim']->errors) == 0) {
+                $this->get_my_claims([
+                    'type' => 'success',
+                    'message' => 'Updated successfully'
+                ]);
+            } else {
+                $this->view('edit', $data);
+            }
+        } else {
+            $this->view('edit', $data);
+        }
     }
+    // public function edit_claim()
+    // {
+    //     $data = $this->authorize_user_can_edit();
+    //     $req = new \Core\Request;
+    //     $data['claim'] = new \Model\Claim;
+    //     // if ($req->posted()) {
+    //     //     $claim_body = $req->post();
+    //     //     var_dump("Edit");
+    //     //     var_dump($claim_body);
+    //     // }
+    //     $this->view('edits', $data);
+    // }
     public function search_by_invent($search)
     {
         $data['claims'] = new \Model\Claim;
         $data['error'] = null;
-
+        $limit = 10;
+        $data['pager'] = new Pager($limit);
+        $offset = $data['pager']->offset;
+        $data['claims']->limit = $limit;
+        $data['claims']->offset = $offset;
         $claims = $data['claims']->get_my_claims(['invent_num' => $search]);
         if (is_string($claims)) {
             $data['error'] = $claims;

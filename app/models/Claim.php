@@ -13,7 +13,6 @@ class Claim
     use Model;
     protected $table = 'claims';
     protected $primaryKey = 'id';
-
     protected $allowedColumns = [
         'neighborhood',
         'invent_num',
@@ -114,8 +113,16 @@ class Claim
     {
 
         if ($this->validate($data)) {
-            var_dump($data);
+
             $this->insert($data);
+            // redirect('claim/get_my_claims');
+        }
+    }
+    public function update_claim($id, $data)
+    {
+        if ($this->validate($data)) {
+
+            $this->update($id, $data);
             // redirect('claim/get_my_claims');
         }
     }

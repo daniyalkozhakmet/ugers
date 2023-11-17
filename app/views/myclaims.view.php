@@ -10,7 +10,7 @@
     </form>
 </section>
 <?php
-!is_null($error) ? include('components/alert.view.php') : include('components/claims.tb.view.php')
+!is_null($error)? include('components/alert.view.php') : include('components/claims.tb.view.php')
 ?>
 
 <?php include('components/footer.view.php'); ?>

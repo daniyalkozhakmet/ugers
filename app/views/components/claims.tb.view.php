@@ -1,3 +1,4 @@
+
 <section class="w-100">
     <table class="table table-hover">
         <thead>
@@ -12,8 +13,6 @@
         </thead>
         <tbody>
             <?php
-
-            use Core\Pager;
 
             foreach ($claims as $claim) {
             ?>
@@ -43,7 +42,6 @@
         </tbody>
     </table>
     <?php
-    $pager = new Pager();
     $pager->display();
     ?>
 </section>
