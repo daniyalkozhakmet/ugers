@@ -29,7 +29,7 @@
                     if (!empty($_SESSION['USER'])) {
                     ?>
                         <li class="nav-item " role="button">
-                            Welcome <span class="text-primary text-uppercase"><?= $_SESSION['USER']->username ?></span>
+                            Привет,  <span class="text-primary text-uppercase"><?= $_SESSION['USER']->username ?></span>
                         </li>
                         <?php
                         if ($_SESSION['USER']->role == 'admin') {

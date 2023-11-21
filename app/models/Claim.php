@@ -63,7 +63,6 @@ class Claim
             'required',
         ],
         'direction' => [
-            'alpha',
             'required',
         ],
         'res' => [

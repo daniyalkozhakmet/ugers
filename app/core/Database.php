@@ -39,6 +39,7 @@ trait Database
 			street_type VARCHAR(50) NOT NULL,
 			type_of_work VARCHAR(50) NOT NULL,
 			is_deleted BOOLEAN DEFAULT false,
+			deleted_at TIMESTAMP,
 			image1 VARCHAR(255),
 			image2 VARCHAR(255),
 			image3 VARCHAR(255),

@@ -87,7 +87,7 @@
             </div>
 
             <div>
-                <img src="<?= get_image() ?>" alt="" class="img-thumbnail js-image-preview" id="image1" style="width: 200px;object-fit:cover">
+                <img src="<?= $data->image1 != '' ? $data->image1 : get_image()  ?>" alt="" class="img-thumbnail js-image-preview" id="image1" style="width: 200px;object-fit:cover">
             </div>
         </div>
         <div class="form-group my-3 d-flex d-flex align-items-center justify-content-between border px-1">
@@ -98,7 +98,7 @@
             </div>
 
             <div class="d-flex align-items-center justify-content-end">
-                <img src="<?= get_image() ?>" alt="" class="img-thumbnail js-image-preview" id="image2" style="width: 200px;object-fit:cover">
+                <img src="<?= $data->image2 != '' ? $data->image2 : get_image() ?>" alt="" class="img-thumbnail js-image-preview" id="image2" style="width: 200px;object-fit:cover">
             </div>
         </div>
         <div class="form-group my-3 d-flex align-items-center justify-content-between border px-1">
@@ -109,7 +109,7 @@
             </div>
 
             <div>
-                <img src="<?= get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="image3" style="width: 200px;object-fit:cover">
+                <img src="<?= $data->image3 != '' ? $data->image3 : get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="image3" style="width: 200px;object-fit:cover">
             </div>
         </div>
         <div class="d-flex justify-content-between align-items-end my-3">

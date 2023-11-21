@@ -97,18 +97,31 @@ function get_pagination_vars(): array
 }
 
 
-/** saves or displays a saved message to the user **/
+/** saves or displays a saved message to the user and deletes after 3 sec **/
 function message(string $msg = null, bool $clear = false)
 {
+  // var_dump("Helolo");
   $ses   = new Core\Session();
 
   if (!empty($msg)) {
     $ses->set('message', $msg);
+    $ses->set('message_time', time());
   } else
 	if (!empty($ses->get('message'))) {
 
     $msg = $ses->get('message');
+    if (!empty($ses->get('message')) && !empty($ses->get('message_time'))) {
+      $currentTime = time();
+      $messageTime = $ses->get('message_time');
 
+      if ($currentTime - $messageTime > 3) {
+        // Remove the message after 5 seconds
+        $ses->pop('message');
+        $ses->pop('message_time');
+        return false;
+        // unset($_SESSION['message_time']);
+      }
+    }
     if ($clear) {
       $ses->pop('message');
     }

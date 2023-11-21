@@ -1,4 +1,3 @@
-
 <section class="w-100">
     <table class="table table-hover">
         <thead>
@@ -28,12 +27,12 @@
                         <?= $claim->street_type ?>
                     </td>
                     <td>
-                        <?= $claim->created_at ?>
+                        <?= date('Y-m-d', strtotime($claim->created_at))   ?>
                     </td>
-
                     <td>
                         <a href=" <?= ROOT . '/claim/edit?id=' . $claim->id ?>" class="btn btn-outline-warning">Edit</a>
                         <a href=" <?= ROOT . '/claim/single?id=' . $claim->id ?>" class="btn btn-outline-primary">View</a>
+                        <a href=" <?= ROOT . '/claim/single?id=' . $claim->id ?>" class="btn btn-outline-danger">Delete</a>
                     </td>
                 </tr>
             <?php

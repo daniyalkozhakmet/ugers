@@ -78,39 +78,6 @@
             </select>
             <div class="text-danger"><?= $claim->getError('type_of_work') ?></div><br>
         </div>
-        <!-- <div class="form-group my-3 d-flex align-items-center justify-content-between border px-1">
-            <div>
-                <label for="exampleFormControlFile1">Photo 1.Kotlavan posle montazha muft</label>
-                <input type="file" class="form-control-file d-block my-2" name="image1" onchange="display_image(this.files[0],this)">
-                <div class="text-danger"><?= $claim->getError('image1') ?></div><br>
-            </div>
-
-            <div>
-                <img src="<?= get_image() ?>" alt="" class="img-thumbnail js-image-preview" id="image1" style="width: 200px;object-fit:cover">
-            </div>
-        </div>
-        <div class="form-group my-3 d-flex d-flex align-items-center justify-content-between border px-1">
-            <div>
-                <label for="exampleFormControlFile1">Photo 2.Razrytyia vostanavleno</label>
-                <input type="file" class="form-control-file d-block my-2" name="image2" onchange="display_image(this.files[0],this)">
-                <div class="text-danger"><?= $claim->getError('image2') ?></div><br>
-            </div>
-
-            <div class="d-flex align-items-center justify-content-end">
-                <img src="<?= get_image() ?>" alt="" class="img-thumbnail js-image-preview" id="image2" style="width: 200px;object-fit:cover">
-            </div>
-        </div>
-        <div class="form-group my-3 d-flex align-items-center justify-content-between border px-1">
-            <div>
-                <label for="exampleFormControlFile1">Photo 3.Kotlavan cherez 15 dnei</label>
-                <input type="file" class="form-control-file d-block my-2" name="image3" onchange="display_image(this.files[0],this)">
-                <div class="text-danger"><?= $claim->getError('image3') ?></div><br>
-            </div>
-
-            <div>
-                <img src="<?= get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="image3" style="width: 200px;object-fit:cover">
-            </div>
-        </div> -->
         <div class="d-flex justify-content-between align-items-end my-3">
             <button type="submit" class="btn btn-primary" onclick="showSpinner()">Create</button>
         </div>

@@ -48,9 +48,10 @@ class Claim
                 return $data;
             }
         }
-        $data['error'] = "Access denied";
-        $data['claim'] = null;
-        return $data;
+        // $data['error'] = "Access denied";
+        // $data['claim'] = null;
+        return redirect('claim/get_my_claims');
+        // return $data;
     }
     public function index()
     {
@@ -154,9 +155,10 @@ class Claim
 
         $data['claims'] = $claims;
         if ($message != '') {
-            $data['info'] = $message;
+            message($message);
+            redirect('claim/get_my_claims');
+            $data['info'] = ['type' => 'success'];
         }
-        var_dump($data['info']);
         $this->view('myclaims', $data);
     }
 
@@ -200,14 +202,16 @@ class Claim
 
 
             $data['claim']->update_claim($claim_id, $new_claim);
+
             $data['claim']->get_my_claims(['id' => $claim_id]);
             $data['claim']->errors += $image_err;
             // $data['data'] = $this->authorize_user_can_edit();
             if (count($data['claim']->errors) == 0) {
-                $this->get_my_claims([
-                    'type' => 'success',
-                    'message' => 'Updated successfully'
-                ]);
+                // $this->get_my_claims([
+                //     'type' => 'success',
+                //     'message' => 'Updated successfully'
+                // ]);
+                $this->get_my_claims('Claim edited successfully');
             } else {
                 $this->view('edit', $data);
             }
