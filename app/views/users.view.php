@@ -1,6 +1,6 @@
 <?php include('components/header.view.php'); ?>
 <section class="d-flex justify-content-between align-items-center flex-column my-4">
-    <h1>Users </h1>
+    <h1>Пользователи </h1>
     <?php
     if (isset($error)) {
     ?>

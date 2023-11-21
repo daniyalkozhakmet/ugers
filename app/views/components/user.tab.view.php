@@ -1,9 +1,12 @@
 <ul class="nav nav-tabs w-100 container my-4">
     <li class="nav-item">
-        <a class="nav-link " id="create" href=" <?= ROOT . '/claim/create' ?>">Create</a>
+        <a class="nav-link " id="create" href=" <?= ROOT . '/claim/create' ?>">Создать</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link " id="get_my_claims" href=" <?= ROOT . '/claim/get_my_claims' ?>"><?= $_SESSION['USER']->username ?> Claims</a>
+        <a class="nav-link " id="get_my_claims" href=" <?= ROOT . '/claim/get_my_claims' ?>">Заявки</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link " id="get_my_deleted_claims" href=" <?= ROOT . '/claim/get_my_deleted_claims' ?>">Удаленные заявки</a>
     </li>
 </ul>
 <script>
@@ -18,7 +21,7 @@
         return pattern.test(mainString);
     }
     const currentUrl = window.location.href;
-    const links = ['create', 'get_my_claims']
+    const links = ['create', 'get_my_claims', 'get_my_deleted_claims']
     links.forEach((link) => {
         if (containsString(currentUrl, link)) {
             document.querySelector(`#${link}`).classList.add('active');

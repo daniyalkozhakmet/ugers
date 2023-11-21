@@ -2,7 +2,7 @@
 
 
 <section class="d-flex justify-content-between align-items-center flex-column my-4">
-    <h1>User </h1>
+    <h1>Пользователи </h1>
     <?php
     if (isset($error)) {
     ?>
@@ -18,23 +18,23 @@
         ?>
         <form class="w-100 " method="POST" action="<?= ROOT . '/admin/edit?id=' . $user->id ?>">
             <div class="form-group my-2">
-                <label for="exampleInputEmail1">Username</label>
+                <label for="exampleInputEmail1">Имя пользователя</label>
                 <input value="<?= $user->username ?>" name="username" disabled class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email or username">
             </div>
 
             <div class="form-group my-2">
-                <label for="exampleInputPassword1">Password</label>
+                <label for="exampleInputPassword1">Пароль</label>
                 <input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
 
             </div>
 
             <div class="form-group my-2">
-                <label for="exampleInputPassword1">Confirm Password</label>
+                <label for="exampleInputPassword1">Подвердить пароль</label>
                 <input value="<?= old_value('password_confirmation') ?>" name="password_confirmation" type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm password">
             </div>
 
             <div class="d-flex justify-content-between align-items-end my-2">
-                <button type="submit" class="btn btn-primary">Edit</button>
+                <button type="submit" class="btn btn-primary">Редактировать</button>
             </div>
         </form>
     <?php

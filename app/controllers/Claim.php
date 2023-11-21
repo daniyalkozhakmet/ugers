@@ -19,11 +19,15 @@ class Claim
     public function authorize_user()
     {
         $ses = new \Core\Session;
-        if (!$ses->is_user()) {
-            redirect('login');
-            return false;
+        if ($ses->is_user()) {
+            return $ses;
+        } else {
+            if (!$ses->is_admin()) {
+                redirect('login');
+                return false;
+            }
+            return $ses;
         }
-        return $ses;
     }
 
     public function authorize_user_can_edit()
@@ -43,7 +47,7 @@ class Claim
         if (is_string($claim)) {
             $data['error'] = $claim;
         } else {
-            if ($claim->res == $username) {
+            if ($claim->res == $username || $username == 'admin') {
                 $data['data'] = $claim;
                 return $data;
             }
@@ -56,7 +60,7 @@ class Claim
     public function index()
     {
         $ses = $this->authorize_user();
-        $this->view('claims');
+        $this->view('404');
     }
     public function single()
     {
@@ -103,6 +107,9 @@ class Claim
 
             $data['claim']->create($new_claim);
             $data['claim']->errors += $image_err;
+            if (count($data['claim']->errors) == 0) {
+                $this->get_my_claims('Заявка создана успешно');
+            }
         }
         $this->view('create', $data);
     }
@@ -111,15 +118,15 @@ class Claim
 
         $folder = 'uploads/';
         $s3 = new AWS();
-        if (!file_exists($folder)) {
-            mkdir($folder, 0777, true);
-            file_put_contents($folder, 'index.php', "");
-        }
+        // if (!file_exists($folder)) {
+        //     mkdir($folder, 0777, true);
+        //     file_put_contents($folder, 'index.php', "");
+        // }
         $allowed = ['image/jpeg', 'image/png', 'image/webp'];
         if (in_array($files[$image_name]['type'], $allowed)) {
             $new_claim[$image_name] = $folder . time() . rand(0, 1000) . $files[$image_name]['name'];
             $response = $s3->putObject($files[$image_name]['tmp_name'], $new_claim[$image_name], $files[$image_name]['type']);
-            move_uploaded_file($files[$image_name]['tmp_name'], $new_claim[$image_name]);
+            // move_uploaded_file($files[$image_name]['tmp_name'], $new_claim[$image_name]);
             $image = new Image;
             $image->resize($new_claim[$image_name], 1000);
             return $response;
@@ -129,7 +136,7 @@ class Claim
             return $response;
         }
     }
-    public function get_my_claims($message = '')
+    public function get_my_claims($message = '', $is_deleted = false)
     {
         $ses = $this->authorize_user();
         $req = new \Core\Request;
@@ -146,7 +153,12 @@ class Claim
             $search = $req->get('invent');
             return $this->search_by_invent($search);
         }
-        $claims = $data['claims']->get_my_claims(['res' => $username]);
+        if ($username == 'admin') {
+            $claims = $data['claims']->get_my_claims(['is_deleted' => $is_deleted]);
+        } else {
+            $claims = $data['claims']->get_my_claims(['res' => $username, 'is_deleted' => $is_deleted]);
+        }
+
         if (is_string($claims)) {
             $data['error'] = $claims;
             $this->view('myclaims', $data);
@@ -161,7 +173,44 @@ class Claim
         }
         $this->view('myclaims', $data);
     }
+    public function get_my_deleted_claims($message = '')
+    {
+        $ses = $this->authorize_user();
+        $req = new \Core\Request;
+        $username = $ses->user('username');
+        $data['claims'] = new \Model\Claim;
+        $data['error'] = null;
+        $limit = 10;
+        $data['pager'] = new Pager($limit);
+        $offset = $data['pager']->offset;
+        $data['claims']->limit = $limit;
+        $data['claims']->offset = $offset;
 
+        if ($req->get('invent') != '') {
+            $search = $req->get('invent');
+            return $this->search_by_invent($search);
+        }
+        if ($username == 'admin') {
+            $claims = $data['claims']->get_my_claims(['is_deleted' => true]);
+        } else {
+            $claims = $data['claims']->get_my_claims(['res' => $username, 'is_deleted' => true]);
+        }
+
+
+        if (is_string($claims)) {
+            $data['error'] = $claims;
+            $this->view('myclaims', $data);
+            return;
+        }
+
+        $data['claims'] = $claims;
+        if ($message != '') {
+            message($message);
+            redirect('claim/get_my_claims');
+            $data['info'] = ['type' => 'success'];
+        }
+        $this->view('myclaims', $data);
+    }
     public function edit()
     {
         $ses = $this->authorize_user();
@@ -171,7 +220,7 @@ class Claim
         $data['claim'] = new \Model\Claim;
         if ($req->posted()) {
             $new_claim = $req->post();
-            $new_claim += array('res' => $ses->user('username'));
+            // $new_claim += array('res' => $ses->user('username'));
             $new_claim += array('user_id' => $ses->user('id'));
             $files = $req->files();
             $images_name = ['image1', 'image2', 'image3'];
@@ -211,7 +260,7 @@ class Claim
                 //     'type' => 'success',
                 //     'message' => 'Updated successfully'
                 // ]);
-                $this->get_my_claims('Claim edited successfully');
+                $this->get_my_claims('Заявка успешно отредактирована');
             } else {
                 $this->view('edit', $data);
             }
@@ -219,18 +268,14 @@ class Claim
             $this->view('edit', $data);
         }
     }
-    // public function edit_claim()
-    // {
-    //     $data = $this->authorize_user_can_edit();
-    //     $req = new \Core\Request;
-    //     $data['claim'] = new \Model\Claim;
-    //     // if ($req->posted()) {
-    //     //     $claim_body = $req->post();
-    //     //     var_dump("Edit");
-    //     //     var_dump($claim_body);
-    //     // }
-    //     $this->view('edits', $data);
-    // }
+    public function delete()
+    {
+        $data = $this->authorize_user_can_edit();
+        $claim = new \Model\Claim;
+        $claim->update($data['data']->id, ['is_deleted' => true, 'deleted_at' => date('Y-m-d H:i:s')]);
+        $this->get_my_claims('Успешно удаленно!', true);
+        // var_dump($data['data']);
+    }
     public function search_by_invent($search)
     {
         $data['claims'] = new \Model\Claim;

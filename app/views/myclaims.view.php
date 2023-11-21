@@ -8,9 +8,9 @@
     <?php } ?>
     <form class="form-inline my-4" method="GET" action="<?= ROOT . '/claim/get_my_claims' ?>">
         <div class="input-group ">
-            <input type="text" class="form-control" name='invent' placeholder="Search by invent num" aria-label="Search by invent num" aria-describedby="basic-addon2">
+            <input type="text" class="form-control" name='invent' placeholder="Поиск по инвентарному номеру" aria-label="Search by invent num" aria-describedby="basic-addon2">
             <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                <button class="btn btn-outline-secondary" type="submit">Поиск</button>
             </div>
         </div>
     </form>

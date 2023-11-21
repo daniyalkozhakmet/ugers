@@ -76,17 +76,17 @@ class User
 				$ses->auth($row);
 				redirect('claim/get_my_claims');
 			} else {
-				$this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
+				$this->errors[$this->loginUniqueColumn] = "Неправильное имя пользователя или пароль";
 			}
 		} else {
-			$this->errors[$this->loginUniqueColumn] = "Wrong $this->loginUniqueColumn or password";
+			$this->errors[$this->loginUniqueColumn] = "Неправильное имя пользователя или пароль";
 		}
 	}
 	public function getUsers()
 	{
 		$users = $this->findAll();
 		if (is_bool($users)) {
-			return ['error' => 'Could not retrieve'];
+			return ['error' => 'Не удалось найти'];
 		}
 		return $users;
 	}
@@ -94,7 +94,7 @@ class User
 	{
 		$user = $this->first(['id' => $data["id"]]);
 		if (is_bool($user)) {
-			return ['error' => 'User with that id not found'];
+			return ['error' => 'Пользователь с таким идентификатором не найден'];
 		}
 		return [$user];
 	}

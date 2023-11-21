@@ -2,23 +2,23 @@
 ?>
 
 <section class="d-flex justify-content-between align-items-center flex-column my-4">
-	<h1 class="text-start">Login </h1>
+	<h1 class="text-start">Логин </h1>
 	<form class="w-100 " method="POST" action="<?= ROOT . '/login' ?>">
 		<div class="form-group">
-			<label for="exampleInputEmail1">Username</label>
-			<input value="<?= old_value('username') ?>" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email or username">
+			<label for="exampleInputEmail1">Имя пользователя</label>
+			<input value="<?= old_value('username') ?>" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Введите имя пользователя">
 			<div class="text-danger"><?= isset($user) ? $user->getError('username') : '' ?></div><br>
 		</div>
 		<div class="form-group " id="show_hide_password">
-			<label for="exampleInputPassword1">Password</label>
+			<label for="exampleInputPassword1">Пароль</label>
 			<div class="input-group">
-				<input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" placeholder="Password">
+				<input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" placeholder="Введите паролб">
 				<span class="input-group-text" id="basic-addon2"><a href=""><i class="bi bi-eye-fill" aria-hidden="true"></i></a></span>
 			</div>
 			<div class="text-danger"><?= isset($user) ? $user->getError('username') : '' ?></div><br>
 		</div>
 		<div class="d-flex justify-content-between align-items-end">
-			<button type="submit" class="btn btn-primary">Login</button>
+			<button type="submit" class="btn btn-primary">Логин</button>
 		</div>
 	</form>
 </section>

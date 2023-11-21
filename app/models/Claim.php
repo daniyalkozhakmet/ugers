@@ -25,6 +25,7 @@ class Claim
         'street_type',
         'type_of_work',
         'is_deleted',
+        'deleted_at',
         'image1',
         'image2',
         'image3',
@@ -52,7 +53,6 @@ class Claim
     protected $validationRules = [
 
         'neighborhood' => [
-            'alpha_numeric',
             'required',
         ],
         'invent_num' => [
@@ -83,11 +83,11 @@ class Claim
             'required',
         ],
         'square_restored_area' => [
+            'alpha_numeric',
             'required',
-            'alpha_numeric'
+
         ],
         'street_type' => [
-            'alpha_numeric',
             'required',
         ],
         'type_of_work' => [
@@ -129,7 +129,7 @@ class Claim
     {
         $claims = $this->where($data);
         if (is_bool($claims)) {
-            return 'Data not found!';
+            return 'Данные не найдены!';
         }
         return $claims;
     }
@@ -138,7 +138,7 @@ class Claim
         $claim = $this->first($data);
 
         if (is_bool($claim)) {
-            return 'Data not found!';
+            return 'Данные не найдены!';
         }
         return $claim;
     }

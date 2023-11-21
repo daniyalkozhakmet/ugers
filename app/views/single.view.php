@@ -6,26 +6,42 @@
     ?>
     <?php else : ?>
         <div>
-            <h2>Cliam <?= $data->invent_num ?></h2>
+            <div>
+                <h2>Заявка <?= $data->invent_num ?></h2>
+                <h3>
+                    РЭС: <?= substr($data->res, 3, 4)  ?>
+                </h3>
+            </div>
+
             <div class="row">
-                <div class="col">
+                <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom ">
-                        <h6>Invent number: </h6>
+                        <h6>Инвентарный номер: </h6>
                         <p class="fw-normal mx-2"><?= $data->invent_num ?></p>
                         <!-- <h5>Res: <span class="fw-normal mx-2"><?= $data->res ?></span></h5> -->
                     </div>
                 </div>
+                <?php if ($data->is_deleted) : ?>
+                    <div class="col-12 col-md-6">
+                        <div class="my-3 border-bottom ">
+                            <h6>Удален в: </h6>
+                            <p class="fw-normal mx-2"><?= date('Y-m-d', strtotime($data->deleted_at))   ?></p>
+                            <!-- <h5>Res: <span class="fw-normal mx-2"><?= $data->res ?></span></h5> -->
+                        </div>
+                    </div>
+                <?php endif ?>
+
             </div>
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Neighborhood: </h6>
+                        <h6>Административный район: </h6>
                         <p class="fw-normal mx-2"><?= $data->neighborhood ?></p>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Address: </h6>
+                        <h6>Адрес: </h6>
                         <p class="fw-normal mx-2"><?= $data->address ?></p>
                     </div>
                 </div>
@@ -34,13 +50,13 @@
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Date of excavation: </h6>
+                        <h6>Дата разрытия: </h6>
                         <p class="fw-normal mx-2"><?= $data->date_of_excavation ?></p>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Date of recovery ABP: </h6>
+                        <h6>Дата восстановления АБП: </h6>
                         <p class="fw-normal mx-2"><?= $data->date_recovery_ABP ?></p>
                     </div>
                 </div>
@@ -48,13 +64,13 @@
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Open square: </h6>
+                        <h6>Площадь вскрытия АБП, м2: </h6>
                         <p class="fw-normal mx-2"><?= $data->open_square ?></p>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Square restored area: </h6>
+                        <h6>Фактически восстановленная площадь м2: </h6>
                         <p class="fw-normal mx-2"><?= $data->square_restored_area ?></p>
                     </div>
                 </div>
@@ -63,13 +79,13 @@
                 <div class="col-12 col-md-6">
 
                     <div class="my-3 border-bottom">
-                        <h6>Street type: </h6>
+                        <h6>Тип улицы: </h6>
                         <p class="fw-normal mx-2"><?= $data->street_type ?></p>
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="my-3 border-bottom">
-                        <h6>Work type: </h6>
+                        <h6>Вид работ: </h6>
                         <p class="fw-normal mx-2"><?= $data->type_of_work ?></p>
                     </div>
                 </div>
@@ -77,7 +93,7 @@
             <div class="row">
                 <div class="col">
                     <div class="my-3 border-bottom">
-                        <h6>Direction: </h6>
+                        <h6>Направление: </h6>
                         <p class="fw-normal mx-2"><?= $data->direction ?></p>
                     </div>
                 </div>
@@ -85,7 +101,7 @@
             <div class="row my-1 border-bottom">
                 <div class="col">
                     <div class="">
-                        <h6>Image 1 : </h6>
+                        <h6>Фото отчет 1 (котлован после монтажа муфт): </h6>
                     </div>
                     <div class="modal fade" id="imageModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -113,7 +129,7 @@
             <div class="row my-1 border-bottom">
                 <div class="col">
                     <div class="">
-                        <h6>Image 2 : </h6>
+                        <h6>Фото отчет 2 (разрытие восстановлено): </h6>
                     </div>
                     <div class="modal fade" id="imageModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -142,7 +158,7 @@
             <div class="row my-1 border-bottom">
                 <div class="col">
                     <div class="">
-                        <h6>Image 3 : </h6>
+                        <h6>Фото отчет 3 (котлован через 15 дней): </h6>
                     </div>
                     <div class="modal fade" id="imageModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">

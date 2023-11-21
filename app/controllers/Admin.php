@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Core\Pager;
 use Model\User;
 
 defined('ROOTPATH') or exit('Access Denied!');
@@ -22,6 +23,10 @@ class Admin
         return $ses;
     }
     public function index()
+    {
+        var_dump('ADMIN');
+    }
+    public function get_users()
     {
         $this->authorize();
         $user = new User;
@@ -55,5 +60,61 @@ class Admin
 
         $user['user'] = $user['user']->getUserById(['id' => $user_id])[0];
         $this->view('user', $user);
+    }
+    public function get_claims($message = '', $is_deleted = false)
+    {
+        $this->authorize();
+        $req = new \Core\Request;
+        $data['claims'] = new \Model\Claim;
+        $data['error'] = null;
+        $limit = 10;
+        $data['pager'] = new Pager($limit);
+        $offset = $data['pager']->offset;
+        $data['claims']->limit = $limit;
+        $data['claims']->offset = $offset;
+
+        if ($req->get('invent') != '') {
+            $search = $req->get('invent');
+            return $this->search_by_invent($search);
+        }
+        $claims = $data['claims']->get_my_claims(['is_deleted' => $is_deleted]);
+        if (is_string($claims)) {
+            $data['error'] = $claims;
+            $this->view('myclaims', $data);
+            return;
+        }
+
+        $data['claims'] = $claims;
+        if ($message != '') {
+            message($message);
+            redirect('claim/get_my_claims');
+            $data['info'] = ['type' => 'success'];
+        }
+        $this->view('myclaims', $data);
+    }
+    public function get_deleted_claims()
+    {
+        $this->authorize();
+        $this->get_claims('', true);
+    }
+    public function search_by_invent($search)
+    {
+        $data['claims'] = new \Model\Claim;
+        $data['error'] = null;
+        $limit = 10;
+        $data['pager'] = new Pager($limit);
+        $offset = $data['pager']->offset;
+        $data['claims']->limit = $limit;
+        $data['claims']->offset = $offset;
+        $claims = $data['claims']->get_my_claims(['invent_num' => $search]);
+        if (is_string($claims)) {
+            $data['error'] = $claims;
+            $this->view('myclaims', $data);
+            return;
+        }
+
+        $data['claims'] = $claims;
+        $this->view('myclaims', $data);
+        return;
     }
 }

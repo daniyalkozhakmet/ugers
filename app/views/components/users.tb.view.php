@@ -3,9 +3,9 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Username</th>
-                <th scope="col">Role</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Имя пользователя</th>
+                <th scope="col">Роль</th>
+                <th scope="col">Действия</th>
             </tr>
         </thead>
         <tbody>
@@ -22,8 +22,8 @@
                     </td>
 
                     <td>
-                        <a href=" <?= ROOT . '/admin/edit?id=' . $user->id ?>" class="btn btn-outline-warning">Edit</a>
-                        <a href=" <?= ROOT . '/admin/view?id=' . $user->id ?>" class="btn btn-outline-primary">View</a>
+                        <a href=" <?= ROOT . '/admin/edit?id=' . $user->id ?>" class="btn btn-outline-warning">Редактировать</a>
+                        <a href=" <?= ROOT . '/admin/view?id=' . $user->id ?>" class="btn btn-outline-primary">Просмотр</a>
                     </td>
                 </tr>
             <?php

@@ -2,6 +2,7 @@
 
 use Model\User;
 
+date_default_timezone_set('Asia/Almaty');
 header('Content-Type: text/html; charset=utf-8');
 session_start();
 

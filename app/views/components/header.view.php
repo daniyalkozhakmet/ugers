@@ -54,7 +54,7 @@
 
                     <?php } else { ?>
                         <li class="nav-item">
-                            <a class="nav-link" class="navbar-brand" href=" <?= ROOT . '/login' ?>">Log in</a>
+                            <a class="nav-link" class="navbar-brand" href=" <?= ROOT . '/login' ?>">Логин</a>
                         </li>
 
 

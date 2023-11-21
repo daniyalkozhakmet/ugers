@@ -38,7 +38,7 @@ class AWS
                 $s3_file_link = $result_arr['ObjectURL'];
                 $response += array('link' => $s3_file_link);
             } else {
-                $api_err = 'FAIL';
+                $api_err = 'Ошибка';
             }
         } catch (S3Exception $e) {
             $api_err = $e->getMessage();
@@ -46,10 +46,10 @@ class AWS
         }
         if (empty($api_err)) {
             $status = 'success';
-            $statusMsg = 'Uploaded';
+            $statusMsg = 'Загружен';
         } else {
             $statusMsg = $api_err;
-            $status = [$file_name => 'Errorrr'];
+            $status = [$file_name => 'Error'];
         }
         $response += array('status' => $status);
         $response += array('message' => $statusMsg);

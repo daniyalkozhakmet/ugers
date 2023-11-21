@@ -69,7 +69,7 @@ class Pager
 			<div>
 				<nav class="<?= $this->nav_class ?>" style="<?= $this->nav_styles ?>">
 					<ul class="<?= $this->ul_class ?>" style="<?= $this->ul_styles ?>">
-						<li class="<?= $this->li_class ?>" style="<?= $this->li_styles ?>"><a class="<?= $this->a_class ?>" style="<?= $this->a_styles ?>" href="<?= $this->links['first'] ?>">First</a></li>
+						<li class="<?= $this->li_class ?>" style="<?= $this->li_styles ?>"><a class="<?= $this->a_class ?>" style="<?= $this->a_styles ?>" href="<?= $this->links['first'] ?>">Первый</a></li>
 
 						<?php for ($x = $this->start; $x <= $this->end; $x++) : ?>
 							<li style="<?= $this->li_styles ?>" class="<?= $this->li_class ?> 
@@ -79,7 +79,7 @@ class Pager
  			    		"><?= $x ?></a></li>
 						<?php endfor; ?>
 
-						<li class="<?= $this->li_class ?>" style="<?= $this->li_styles ?>"><a style="<?= $this->a_styles ?>" class="<?= $this->a_class ?>" href="<?= $this->links['next'] ?>">Next</a></li>
+						<li class="<?= $this->li_class ?>" style="<?= $this->li_styles ?>"><a style="<?= $this->a_styles ?>" class="<?= $this->a_class ?>" href="<?= $this->links['next'] ?>">Последний</a></li>
 					</ul>
 				</nav>
 			</div>

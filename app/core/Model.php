@@ -171,7 +171,7 @@ trait Model
 					switch ($rule) {
 						case 'required':
 							if (empty($data[$column]))
-								$this->errors[$column] = ucfirst($column) . " is required";
+								$this->errors[$column] = "Введите " . ucfirst($column);
 							break;
 						case 'email':
 
@@ -180,7 +180,7 @@ trait Model
 							break;
 						case 'numeric_fixed_8':
 							if (!preg_match("/^\d{1,10}$/", trim($data[$column])))
-								$this->errors[$column] = ucfirst($column) . " should only have numbers with 10 values";
+								$this->errors[$column] = ucfirst($column) . " не должно быть не более 10 чисел";
 							break;
 						case 'alpha':
 							if (!preg_match("/^[a-zA-Z]+$/", trim($data[$column])))
@@ -191,8 +191,8 @@ trait Model
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
 						case 'alpha_numeric':
-							if (!preg_match("/^[a-zA-Z0-9]+$/", trim($data[$column])))
-								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
+							if (!preg_match("/^[a-zA-Z0-9а-яА-Я]+$/", trim($data[$column])))
+								$this->errors[$column] = "Должны быть только цифры " . ucfirst($column);
 							break;
 						case 'alpha_numeric_symbol':
 							if (!preg_match("/^[a-zA-Z0-9\-\_\$\%\*\[\]\(\)\& ]+$/", trim($data[$column])))
