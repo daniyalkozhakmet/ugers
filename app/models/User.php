@@ -108,10 +108,7 @@ class User
 			return false;
 		}
 	}
-	public function seedUserRoles()
-	{
-		$this->seedUsers();
-	}
+
 	public function seedUsers()
 	{
 		$users = [

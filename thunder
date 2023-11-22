@@ -1,0 +1,27 @@
+<?php
+// Check if command-line arguments are provided
+
+
+if (php_sapi_name() != 'cli') {
+
+    die("Only cli");
+}
+define('DS', DIRECTORY_SEPARATOR);
+define('CPATH', __DIR__ . DS);
+define('ROOTPATH', __DIR__ . DS);
+chdir(CPATH);
+$action = $argv[1] ?? 'help';
+require 'app' . DS . 'thunder' . DS . 'init.php';
+$thunder = new \Thunder\Thunder;
+switch ($action) {
+    case 'create':
+        call_user_func_array([$thunder, 'create'], []);
+        break;
+    case 'seed':
+        call_user_func_array([$thunder, 'seed'], []);
+        break;
+    default:
+        # code...
+        echo "Failed";
+        break;
+}

@@ -2,18 +2,18 @@
 
 defined('ROOTPATH') or exit('Access Denied!');
 
-if ($_SERVER['SERVER_NAME'] == 'localhost') {
+if (((empty($_SERVER['SERVER_NAME'])) && php_sapi_name() == 'cli') || !empty($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'localhost') {
 	/** database config **/
 	define('DBNAME', 'ugers');
 	define('DBHOST', 'localhost');
 	define('DBUSER', 'root');
 	define('DBPASS', '');
 	define('DBDRIVER', '');
-	define('ACCESSKEYID', 'AKIAY5NCYP3W4VHZZIAV');
-	define('SECRETACCESSKEY', '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');
+	define('ACCESSKEYID', 'AKIAZNZLSE4EULSXF427');
+	define('SECRETACCESSKEY', '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');
 	define('REGION', 'eu-north-1');
 	define('VERSION', 'latest');
-	define('BUCKET', 'pharmafy');
+	define('BUCKET', 'ugerss');
 
 	define('ROOT', 'http://localhost/ugers/public');
 } else {

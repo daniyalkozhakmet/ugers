@@ -70,6 +70,9 @@ class Claim
     public function create()
     {
         $ses = $this->authorize_user();
+        if ($ses->is_admin()) {
+            return redirect('claim/get_my_claims');
+        }
         $req = new \Core\Request;
         $data['claim'] = new \Model\Claim;
         if ($req->posted()) {
@@ -127,14 +130,19 @@ class Claim
             $new_claim[$image_name] = $folder . time() . rand(0, 1000) . $files[$image_name]['name'];
             $response = $s3->putObject($files[$image_name]['tmp_name'], $new_claim[$image_name], $files[$image_name]['type']);
             // move_uploaded_file($files[$image_name]['tmp_name'], $new_claim[$image_name]);
-            $image = new Image;
-            $image->resize($new_claim[$image_name], 1000);
+            // $image = new Image;
+            // $image->resize($new_claim[$image_name], 1000);
             return $response;
         } else {
             $response['errors'] = [];
             $response['errors'] += array($image_name => 'File type not supported');
             return $response;
         }
+    }
+    public function deleteImage($image_name)
+    {
+        $s3 = new AWS();
+        $s3->deleteObject($image_name);
     }
     public function get_my_claims($message = '', $is_deleted = false)
     {
@@ -217,7 +225,9 @@ class Claim
         $data = $this->authorize_user_can_edit();
         $req = new \Core\Request;
         $claim_id = $req->get('id');
+
         $data['claim'] = new \Model\Claim;
+        $claim_before_edited = $data['claim']->get_my_claims(['id' => $claim_id])[0];
         if ($req->posted()) {
             $new_claim = $req->post();
             // $new_claim += array('res' => $ses->user('username'));
@@ -231,6 +241,7 @@ class Claim
                 foreach ($images_name as $image_name) {
                     if (!empty($files[$image_name]['name'])) {
                         $image_AWS = $this->upload($files, $image_name);
+                        // var_dump($image_AWS['status']);
                         if (isset($image_AWS['errors']) &&  count($image_AWS['errors']) > 0) {
 
                             foreach ($image_AWS['errors'] as $key => $value) {
@@ -239,10 +250,15 @@ class Claim
                             }
                         } else {
                             if ($image_AWS['status'] == 'error') {
-
-                                $data['claim']->errors += $image_AWS['message'];
+                                $image_err += array($image_name => $image_AWS['message']);
                             } else {
+
                                 $new_claim += array($image_name => $image_AWS['link']);
+                                if ($claim_before_edited->$image_name != '') {
+                                    var_dump('Delete');
+                                    var_dump($claim_before_edited->$image_name);
+                                    $this->deleteImage($claim_before_edited->$image_name);
+                                }
                             }
                         }
                     }
@@ -254,12 +270,8 @@ class Claim
 
             $data['claim']->get_my_claims(['id' => $claim_id]);
             $data['claim']->errors += $image_err;
-            // $data['data'] = $this->authorize_user_can_edit();
+            // var_dump($data['claim']->errors);
             if (count($data['claim']->errors) == 0) {
-                // $this->get_my_claims([
-                //     'type' => 'success',
-                //     'message' => 'Updated successfully'
-                // ]);
                 $this->get_my_claims('Заявка успешно отредактирована');
             } else {
                 $this->view('edit', $data);

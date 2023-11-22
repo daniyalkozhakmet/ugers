@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Aws\Exception\AwsException;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 
@@ -49,10 +50,49 @@ class AWS
             $statusMsg = 'Загружен';
         } else {
             $statusMsg = $api_err;
-            $status = [$file_name => 'Error'];
+            $status = 'error';
         }
         $response += array('status' => $status);
         $response += array('message' => $statusMsg);
         return $response;
+    }
+    public function deleteObject($objectKey)
+    {
+        $response = [];
+        try {
+            // Delete the object
+            $key = $this->get_path($objectKey);
+            $result = $this->initialize()->deleteObject([
+                'Bucket' => BUCKET,
+                'Key' => $key,
+            ]);
+        } catch (AwsException $e) {
+            $api_err = $e->getMessage();
+        }
+        if (empty($api_err)) {
+            $status = 'success';
+            $statusMsg = 'Удален';
+        } else {
+            $statusMsg = $api_err;
+            $status = 'error';
+        }
+        $response += array('status' => $status);
+        $response += array('message' => $statusMsg);
+        return $response;
+    }
+    public function get_path($url)
+    {
+
+        // Find the position of "/uploads/"
+        $pos = strpos($url, 'com/');
+
+        if ($pos !== false) {
+            // Extract base URL and path
+            $baseUrl = substr($url, 0, $pos + strlen('com/'));
+            $path = substr($url, $pos + strlen('com/'));
+            return $path;
+        } else {
+            return false;
+        }
     }
 }
