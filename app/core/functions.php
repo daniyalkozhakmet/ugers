@@ -134,7 +134,7 @@ function message(string $msg = null, bool $clear = false)
 /** return URL variables **/
 function URL($key): mixed
 {
-  $URL = $_GET['url'] ?? 'home';
+  $URL = $_GET['url'] ?? 'login';
   $URL = explode("/", trim($URL, "/"));
 
   switch ($key) {

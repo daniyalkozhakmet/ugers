@@ -99,7 +99,44 @@ trait Model
 
 		return false;
 	}
+	public function match($data, $data_not = [])
+	{
+		$is_deleted = false;
+		//Check if admin wants to filter by all cliams
+		if (!isset($data['is_deleted'])) {
+			$keys = array_keys($data);
+			$query = "select * from $this->table where ";
+			foreach ($keys as $key) {
+				$query .= $key . " LIKE '%" . $data[$key] . "%'" . " OR ";
+			}
 
+			$query = trim($query, " OR ");
+
+			$query .= " order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
+			$data = array_merge($data, $data_not);
+			return $this->query($query);
+		}
+		//Check if admin wants to filter by deleted or not deleted cliams
+		if (isset($data['is_deleted'])) {
+			$is_deleted = intval($data['is_deleted']);
+			unset($data['is_deleted']);
+		}
+
+
+		$keys = array_keys($data);
+		$query = "select * from $this->table where ";
+		$query .= ' is_deleted = ' . $is_deleted . ' AND (';
+		foreach ($keys as $key) {
+			$query .= $key . " LIKE '%" . $data[$key] . "%'" . " OR ";
+		}
+
+		$query = trim($query, " OR ");
+
+		$query .= ") order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
+		$data = array_merge($data, $data_not);
+
+		return $this->query($query);
+	}
 	public function update($id, $data, $id_column = 'id')
 	{
 

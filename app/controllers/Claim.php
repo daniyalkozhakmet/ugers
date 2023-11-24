@@ -30,6 +30,7 @@ class Claim
         }
     }
 
+
     public function authorize_user_can_edit()
     {
         $ses = $this->authorize_user();
@@ -52,10 +53,7 @@ class Claim
                 return $data;
             }
         }
-        // $data['error'] = "Access denied";
-        // $data['claim'] = null;
         return redirect('claim/get_my_claims');
-        // return $data;
     }
     public function index()
     {
@@ -135,7 +133,7 @@ class Claim
             return $response;
         } else {
             $response['errors'] = [];
-            $response['errors'] += array($image_name => 'File type not supported');
+            $response['errors'] += array($image_name => 'Тип файла не поддерживается');
             return $response;
         }
     }
@@ -156,10 +154,11 @@ class Claim
         $offset = $data['pager']->offset;
         $data['claims']->limit = $limit;
         $data['claims']->offset = $offset;
+        $data['is_deleted'] = false;
 
         if ($req->get('invent') != '') {
             $search = $req->get('invent');
-            return $this->search_by_invent($search);
+            return $this->search_by_invent($search, false);
         }
         if ($username == 'admin') {
             $claims = $data['claims']->get_my_claims(['is_deleted' => $is_deleted]);
@@ -174,6 +173,7 @@ class Claim
         }
 
         $data['claims'] = $claims;
+
         if ($message != '') {
             message($message);
             redirect('claim/get_my_claims');
@@ -181,44 +181,7 @@ class Claim
         }
         $this->view('myclaims', $data);
     }
-    public function get_my_deleted_claims($message = '')
-    {
-        $ses = $this->authorize_user();
-        $req = new \Core\Request;
-        $username = $ses->user('username');
-        $data['claims'] = new \Model\Claim;
-        $data['error'] = null;
-        $limit = 10;
-        $data['pager'] = new Pager($limit);
-        $offset = $data['pager']->offset;
-        $data['claims']->limit = $limit;
-        $data['claims']->offset = $offset;
 
-        if ($req->get('invent') != '') {
-            $search = $req->get('invent');
-            return $this->search_by_invent($search);
-        }
-        if ($username == 'admin') {
-            $claims = $data['claims']->get_my_claims(['is_deleted' => true]);
-        } else {
-            $claims = $data['claims']->get_my_claims(['res' => $username, 'is_deleted' => true]);
-        }
-
-
-        if (is_string($claims)) {
-            $data['error'] = $claims;
-            $this->view('myclaims', $data);
-            return;
-        }
-
-        $data['claims'] = $claims;
-        if ($message != '') {
-            message($message);
-            redirect('claim/get_my_claims');
-            $data['info'] = ['type' => 'success'];
-        }
-        $this->view('myclaims', $data);
-    }
     public function edit()
     {
         $ses = $this->authorize_user();
@@ -233,7 +196,7 @@ class Claim
             // $new_claim += array('res' => $ses->user('username'));
             $new_claim += array('user_id' => $ses->user('id'));
             $files = $req->files();
-            $images_name = ['image1', 'image2', 'image3'];
+            $images_name = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'claim_photo'];
             $image_AWS = [];
             $image_err = [];
             $check_before_image = $data['claim']->validate($new_claim);
@@ -255,8 +218,7 @@ class Claim
 
                                 $new_claim += array($image_name => $image_AWS['link']);
                                 if ($claim_before_edited->$image_name != '') {
-                                    var_dump('Delete');
-                                    var_dump($claim_before_edited->$image_name);
+
                                     $this->deleteImage($claim_before_edited->$image_name);
                                 }
                             }
@@ -288,7 +250,7 @@ class Claim
         $this->get_my_claims('Успешно удаленно!', true);
         // var_dump($data['data']);
     }
-    public function search_by_invent($search)
+    public function search_by_invent($search, $is_deleted = false)
     {
         $data['claims'] = new \Model\Claim;
         $data['error'] = null;
@@ -297,7 +259,9 @@ class Claim
         $offset = $data['pager']->offset;
         $data['claims']->limit = $limit;
         $data['claims']->offset = $offset;
-        $claims = $data['claims']->get_my_claims(['invent_num' => $search]);
+        $data['is_deleted'] = $is_deleted;
+        $claims = $data['claims']->search(['invent_num' => $search, 'is_deleted' => $is_deleted]);
+
         if (is_string($claims)) {
             $data['error'] = $claims;
             $this->view('myclaims', $data);

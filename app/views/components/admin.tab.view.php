@@ -6,7 +6,7 @@
         <a class="nav-link " id="get_my_claims" href=" <?= ROOT . '/claim/get_my_claims' ?>">Заявки</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link " id="get_my_deleted_claims" href=" <?= ROOT . '/claim/get_my_deleted_claims' ?>">Удаленные заявки</a>
+        <a class="nav-link " id="get_my_deleted_claims" href=" <?= ROOT . '/admin/get_my_deleted_claims' ?>">Удаленные заявки</a>
     </li>
 </ul>
 <script>

@@ -1,7 +1,14 @@
 <?php include('components/header.view.php');
 ?>
 <section class="d-flex justify-content-between align-items-center flex-column my-4">
-    <h2>Редактировать <?= $data->invent_num ?></h2>
+    <div class="d-flex justify-content-between align-items-center w-100 my-3">
+        <h2 >Редактировать <?= $data->invent_num ?></h2>
+        <a href=" <?= ROOT . '/claim/single?id=' . $data->id ?>" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+            </svg></a>
+    </div>
+
     <form class="w-100 " method="POST" action="<?= ROOT . '/claim/edit?id=' . $data->id ?>" enctype="multipart/form-data">
 
         <div class="form-group">
@@ -113,10 +120,61 @@
                 <img src="<?= $data->image3 != '' ? $data->image3 : get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="image3" style="width: 200px;object-fit:cover">
             </div>
         </div>
+
+        <div class="form-group">
+            <label for="date_recovery_ABP">Месяц подписания акта выполненных работ</label>
+            <input value="<?= $data->date_of_sign ?>" name="date_of_sign" type="date" class="form-control" id="date_of_sign">
+            <div class="text-danger"><?= $claim->getError('date_of_sign') ?></div><br>
+        </div>
+        <div class="form-group my-3 d-flex align-items-center justify-content-between border px-1">
+            <div>
+                <label for="exampleFormControlFile1">Фото заявки по провалу
+                </label>
+                <input type="file" class="form-control-file d-block my-2" name="claim_photo" onchange="display_image(this.files[0],this)">
+                <div class="text-danger"><?= $claim->getError('claim_photo') ?></div><br>
+            </div>
+
+            <div>
+                <img src="<?= $data->claim_photo != '' ? $data->claim_photo : get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="claim_photo" style="width: 200px;object-fit:cover">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="date_of_sending">Дата отправки заявки по правалу</label>
+            <input value="<?= $data->date_of_sending ?>" name="date_of_sending" type="date" class="form-control" id="date_of_sending">
+            <div class="text-danger"><?= $claim->getError('date_of_sending') ?></div><br>
+        </div>
+        <div class="form-group">
+            <label for="date_of_fixing">Дата устранения провала</label>
+            <input value="<?= $data->date_of_fixing ?>" name="date_of_fixing" type="date" class="form-control" id="date_of_fixing">
+            <div class="text-danger"><?= $claim->getError('date_of_fixing') ?></div><br>
+        </div>
+        <div class="form-group my-3 d-flex align-items-center justify-content-between border px-1">
+            <div>
+                <label for="exampleFormControlFile1">Фото отчет 5 (обнаружение провала)
+                </label>
+                <input type="file" class="form-control-file d-block my-2" name="image5" onchange="display_image(this.files[0],this)">
+                <div class="text-danger"><?= $claim->getError('image5') ?></div><br>
+            </div>
+
+            <div>
+                <img src="<?= $data->image5 != '' ? $data->image5 : get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="image5" style="width: 200px;object-fit:cover">
+            </div>
+        </div>
+        <div class="form-group my-3 d-flex align-items-center justify-content-between border px-1">
+            <div>
+                <label for="exampleFormControlFile1">Фото отчет 6 (устранения провала)
+                </label>
+                <input type="file" class="form-control-file d-block my-2" name="image6" onchange="display_image(this.files[0],this)">
+                <div class="text-danger"><?= $claim->getError('image6') ?></div><br>
+            </div>
+
+            <div>
+                <img src="<?= $data->image6 != '' ? $data->image6 : get_image() ?>" alt="" class="img-thumbnail js-image-preview " id="image6" style="width: 200px;object-fit:cover">
+            </div>
+        </div>
         <div class="d-flex justify-content-between align-items-end my-3">
             <button type="submit" class="btn btn-primary" onclick="showSpinner()">Редактировать</button>
         </div>
-
     </form>
     <div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
@@ -129,6 +187,7 @@
             </div>
         </div>
     </div>
+
 </section>
 
 <script>
@@ -143,6 +202,18 @@
                 break;
             case 'image3':
                 query = 'image3';
+                break;
+            case 'image4':
+                query = 'image4';
+                break;
+            case 'image5':
+                query = 'image5';
+                break;
+            case 'image6':
+                query = 'image6';
+                break;
+            case 'claim_photo':
+                query = 'claim_photo';
                 break;
             default:
                 break

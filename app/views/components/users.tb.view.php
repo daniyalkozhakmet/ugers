@@ -23,7 +23,7 @@
 
                     <td>
                         <a href=" <?= ROOT . '/admin/edit?id=' . $user->id ?>" class="btn btn-outline-warning">Редактировать</a>
-                        <a href=" <?= ROOT . '/admin/view?id=' . $user->id ?>" class="btn btn-outline-primary">Просмотр</a>
+                        <a href=" <?= ROOT . '/admin/claim_view_by_user?id=' . $user->id ?>" class="btn btn-outline-primary">Просмотр</a>
                     </td>
                 </tr>
             <?php

@@ -31,6 +31,11 @@ class Claim
         'image3',
         'image4',
         'image5',
+        'image6',
+        'claim_photo',
+        'date_of_sign',
+        'date_of_sending',
+        'date_of_fixing',
         "user_id",
         'res'
     ];
@@ -97,11 +102,13 @@ class Claim
         'image1' => [],
         'image2' => [],
         'image3' => [],
-        'image4' => [],
         'image5' => [],
-        'user_id' => [
-            'required',
-        ],
+        'image6' => [],
+        'claim_photo' => [],
+        'date_of_sign' => [],
+        'date_of_sending' => [],
+        'date_of_fixing' => [],
+        'user_id' => [],
 
     ];
     public function validate_before_create($data)
@@ -136,6 +143,15 @@ class Claim
     public function get_single_claim($data)
     {
         $claim = $this->first($data);
+
+        if (is_bool($claim)) {
+            return 'Данные не найдены!';
+        }
+        return $claim;
+    }
+    public function search($search)
+    {
+        $claim = $this->match($search);
 
         if (is_bool($claim)) {
             return 'Данные не найдены!';

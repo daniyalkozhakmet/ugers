@@ -12,7 +12,7 @@
 		<div class="form-group " id="show_hide_password">
 			<label for="exampleInputPassword1">Пароль</label>
 			<div class="input-group">
-				<input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" placeholder="Введите паролб">
+				<input value="<?= old_value('password') ?>" name="password" type="password" class="form-control" placeholder="Введите пароль">
 				<span class="input-group-text" id="basic-addon2"><a href=""><i class="bi bi-eye-fill" aria-hidden="true"></i></a></span>
 			</div>
 			<div class="text-danger"><?= isset($user) ? $user->getError('username') : '' ?></div><br>

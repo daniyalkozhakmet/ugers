@@ -12,7 +12,7 @@ class App
 
 	private function splitURL()
 	{
-		$URL = $_GET['url'] ?? 'home';
+		$URL = $_GET['url'] ?? 'login';
 		$URL = explode("/", trim($URL, "/"));
 		return $URL;
 	}
