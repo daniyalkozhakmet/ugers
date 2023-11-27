@@ -102,15 +102,17 @@ trait Model
 	public function match($data, $data_not = [])
 	{
 		$is_deleted = false;
+
 		//Check if admin wants to filter by all cliams
-		if (!isset($data['is_deleted'])) {
+		if (!is_bool($data['is_deleted'])) {
+			unset($data['is_deleted']);
 			$keys = array_keys($data);
 			$query = "select * from $this->table where ";
 			foreach ($keys as $key) {
-				$query .= $key . " LIKE '%" . $data[$key] . "%'" . " OR ";
+				$query .= $key . " LIKE '%" . $data[$key] . "%'" . " AND ";
 			}
 
-			$query = trim($query, " OR ");
+			$query = trim($query, " AND ");
 
 			$query .= " order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
 			$data = array_merge($data, $data_not);
@@ -122,10 +124,25 @@ trait Model
 			unset($data['is_deleted']);
 		}
 
+		$query = "select * from $this->table where ";
+		$query .= ' is_deleted = ' . $is_deleted . ' AND ';
+		//Check if user wants to filter
+		if (isset($data['res'])) {
+			if ($data['res'] == 'admin') {
+				unset($data['res']);
+			} else {
+				if ($data['res']  == '') {
+					unset($data['res']);
+				} else {
+					$res = $data['res'];
+					$query .= ' res = :' . 'res' . ' AND ';
+					unset($data['res']);
+				}
+			}
+		}
 
 		$keys = array_keys($data);
-		$query = "select * from $this->table where ";
-		$query .= ' is_deleted = ' . $is_deleted . ' AND (';
+		$query .= '(';
 		foreach ($keys as $key) {
 			$query .= $key . " LIKE '%" . $data[$key] . "%'" . " OR ";
 		}
@@ -134,8 +151,7 @@ trait Model
 
 		$query .= ") order by $this->order_column $this->order_type limit $this->limit offset $this->offset";
 		$data = array_merge($data, $data_not);
-
-		return $this->query($query);
+		return $this->query($query, isset($res) ?  ['res' => $res] : []);
 	}
 	public function update($id, $data, $id_column = 'id')
 	{

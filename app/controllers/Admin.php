@@ -82,7 +82,9 @@ class Admin
             return redirect('admin/get_users');
         }
         if ($invent_num != '') {
-            $claims = $data['claims']->match(['invent_num' => $invent_num]);
+            $search = $req->get('invent');
+
+            return $this->search_by_invent($search, $is_deleted = '', $res = $user_id);
         } else {
             $claims = $data['claims']->get_my_claims(['user_id' => $user_id]);
         }
@@ -96,6 +98,7 @@ class Admin
 
         $data['claims'] = $claims;
         $data['user_id'] = $user_id;
+
         $this->view('myclaims', $data);
     }
     public function get_my_deleted_claims($message = '')
@@ -111,7 +114,8 @@ class Admin
         $data['claims']->limit = $limit;
         $data['claims']->offset = $offset;
         $data['is_deleted'] = true;
-        if ($req->get('invent') != '') {
+        $invent_num = $req->get('invent');
+        if ($invent_num != '') {
             $search = $req->get('invent');
             return $this->search_by_invent($search, true);
         }
@@ -136,7 +140,7 @@ class Admin
         }
         $this->view('myclaims', $data);
     }
-    public function search_by_invent($search, $is_deleted = false)
+    public function search_by_invent($search, $is_deleted = '', $res = '')
     {
         $data['claims'] = new \Model\Claim;
         $data['error'] = null;
@@ -146,7 +150,7 @@ class Admin
         $data['claims']->limit = $limit;
         $data['claims']->offset = $offset;
         $data['is_deleted'] = $is_deleted;
-        $claims = $data['claims']->search(['invent_num' => $search, 'is_deleted' => $is_deleted]);
+        $claims = $data['claims']->search(['invent_num' => $search, 'is_deleted' => $is_deleted, 'res' => $res]);
 
         if (is_string($claims)) {
             $data['error'] = $claims;

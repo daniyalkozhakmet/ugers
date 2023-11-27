@@ -158,7 +158,8 @@ class Claim
 
         if ($req->get('invent') != '') {
             $search = $req->get('invent');
-            return $this->search_by_invent($search, false);
+
+            return $this->search_by_invent($search, false, $username);
         }
         if ($username == 'admin') {
             $claims = $data['claims']->get_my_claims(['is_deleted' => $is_deleted]);
@@ -194,7 +195,7 @@ class Claim
         if ($req->posted()) {
             $new_claim = $req->post();
             // $new_claim += array('res' => $ses->user('username'));
-            $new_claim += array('user_id' => $ses->user('id'));
+            // $new_claim += array('user_id' => $ses->user('id'));
             $files = $req->files();
             $images_name = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'claim_photo'];
             $image_AWS = [];
@@ -250,7 +251,7 @@ class Claim
         $this->get_my_claims('Успешно удаленно!', true);
         // var_dump($data['data']);
     }
-    public function search_by_invent($search, $is_deleted = false)
+    public function search_by_invent($search, $is_deleted = false, $res = '')
     {
         $data['claims'] = new \Model\Claim;
         $data['error'] = null;
@@ -260,7 +261,7 @@ class Claim
         $data['claims']->limit = $limit;
         $data['claims']->offset = $offset;
         $data['is_deleted'] = $is_deleted;
-        $claims = $data['claims']->search(['invent_num' => $search, 'is_deleted' => $is_deleted]);
+        $claims = $data['claims']->search(['invent_num' => $search, 'is_deleted' => $is_deleted, 'res' => $res]);
 
         if (is_string($claims)) {
             $data['error'] = $claims;
