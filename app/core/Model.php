@@ -244,7 +244,7 @@ trait Model
 								$this->errors[$column] = ucfirst($column) . " should only have aphabetical letters & spaces";
 							break;
 						case 'alpha_numeric':
-							if (!preg_match("/^[a-zA-Z0-9а-яА-Я]+$/", trim($data[$column])))
+							if (!preg_match("/^[0-9]+$/", trim($data[$column])))
 								$this->errors[$column] = "Должны быть только цифры " . ucfirst($column);
 							break;
 						case 'alpha_numeric_symbol':

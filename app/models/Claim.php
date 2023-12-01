@@ -55,6 +55,7 @@ class Claim
 		alpha_symbol
      * 
      ****************************/
+
     protected $validationRules = [
 
         'neighborhood' => [
@@ -90,7 +91,6 @@ class Claim
         'square_restored_area' => [
             'alpha_numeric',
             'required',
-
         ],
         'street_type' => [
             'required',

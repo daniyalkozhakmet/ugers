@@ -235,8 +235,10 @@ class Claim
             $data['claim']->errors += $image_err;
             // var_dump($data['claim']->errors);
             if (count($data['claim']->errors) == 0) {
+
                 $this->get_my_claims('Заявка успешно отредактирована');
             } else {
+
                 $this->view('edit', $data);
             }
         } else {
