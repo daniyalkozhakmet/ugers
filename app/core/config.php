@@ -27,8 +27,8 @@ if (((empty($_SERVER['SERVER_NAME'])) && php_sapi_name() == 'cli') || !empty($_S
 	define('ROOT', 'https://www.yourwebsite.com');
 }
 
-define('APP_NAME', "My Webiste");
-define('APP_DESC', "Best website on the planet");
+define('APP_NAME', "УГЕРС");
+define('APP_DESC', "УГЕРС");
 
 /** true means show errors **/
 define('DEBUG', true);

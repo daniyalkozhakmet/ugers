@@ -13,7 +13,7 @@ class Home
 
 	public function index()
 	{
-
+	//Returning home
 		$this->view('login');
 	}
 

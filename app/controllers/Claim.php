@@ -16,6 +16,7 @@ defined('ROOTPATH') or exit('Access Denied!');
 class Claim
 {
     use MainController;
+    // Check if it is logged in
     public function authorize_user()
     {
         $ses = new \Core\Session;
@@ -30,7 +31,7 @@ class Claim
         }
     }
 
-
+    //Check if user can edit his cliams
     public function authorize_user_can_edit()
     {
         $ses = $this->authorize_user();
@@ -55,16 +56,19 @@ class Claim
         }
         return redirect('claim/get_my_claims');
     }
+    //Shows 404 page
     public function index()
     {
         $ses = $this->authorize_user();
         $this->view('404');
     }
+    //Get single cliam
     public function single()
     {
         $data = $this->authorize_user_can_edit();
         $this->view('single', $data);
     }
+    //Creates new cliam
     public function create()
     {
         $ses = $this->authorize_user();
@@ -114,6 +118,7 @@ class Claim
         }
         $this->view('create', $data);
     }
+    //Upload file
     public function upload($files, $image_name)
     {
 
@@ -137,11 +142,13 @@ class Claim
             return $response;
         }
     }
+    //Deletes replaced image
     public function deleteImage($image_name)
     {
         $s3 = new AWS();
         $s3->deleteObject($image_name);
     }
+    //Get cliams by user
     public function get_my_claims($message = '', $is_deleted = false)
     {
         $ses = $this->authorize_user();
@@ -182,7 +189,7 @@ class Claim
         }
         $this->view('myclaims', $data);
     }
-
+    //Edit claim
     public function edit()
     {
         $ses = $this->authorize_user();
@@ -245,6 +252,7 @@ class Claim
             $this->view('edit', $data);
         }
     }
+    //Delete a cliam
     public function delete()
     {
         $data = $this->authorize_user_can_edit();
@@ -253,6 +261,7 @@ class Claim
         $this->get_my_claims('Успешно удаленно!', true);
         // var_dump($data['data']);
     }
+    //Seacrh by invent
     public function search_by_invent($search, $is_deleted = false, $res = '')
     {
         $data['claims'] = new \Model\Claim;

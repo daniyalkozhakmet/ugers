@@ -20,7 +20,7 @@ class Thunder
             //throw $th;
             echo "Failed";
         }
-        $this->createTables();
+        // $this->createTables();
     }
     public function seed()
     {

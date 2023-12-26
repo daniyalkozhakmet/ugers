@@ -27,6 +27,7 @@
                         const currentUrl = window.location.href;
                         if (!containsString(currentUrl, 'login')) {
                             alert('Сеанс завершен! ');
+                            clearInterval(intervalId)
                         }
 
                         // window.location.href = 'login.php';
@@ -38,9 +39,9 @@
         }
 
         // Call check_session function every 10 seconds
-        setInterval(function() {
-            check_session();
-        }, 1000); // 10000 means 10 seconds
+        // var intervalId = setInterval(function() {
+        //     check_session();
+        // }, 1000); // 10000 means 10 seconds
     });
 </script>
 </body>
